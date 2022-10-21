@@ -1,5 +1,6 @@
 
 #include <windows.h>
+#include "Render.h"
 
 // 関数のプロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -35,8 +36,8 @@ int WINAPI WinMain(const HINSTANCE hInstance, const  HINSTANCE hPrevInstance, co
 		WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,// ウィンドウスタイル
 		CW_USEDEFAULT,// ウィンドウの左上Ｘ座標
 		CW_USEDEFAULT,// ウィンドウの左上Ｙ座標 
-		640,// ウィンドウの幅
-		480,// ウィンドウの高さ
+		ScreenWidth,// ウィンドウの幅
+		ScreenHeight,// ウィンドウの高さ
 		NULL,// 親ウィンドウのハンドル
 		NULL,// メニューハンドルまたは子ウィンドウID
 		hInstance,// インスタンスハンドル
@@ -47,6 +48,28 @@ int WINAPI WinMain(const HINSTANCE hInstance, const  HINSTANCE hPrevInstance, co
 	// ウィンドウの状態を直ちに反映(ウィンドウのクライアント領域を更新)
 	UpdateWindow(hWnd);
 
+	// 以下処理
+
+	// 初期化
+	Render render = Render(hWnd);
+	render.init();
+
+	for (MSG msg;;) {
+		// 前回のループからユーザー操作があったか調べる
+		const BOOL doesMessageExist = PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+		if (doesMessageExist) {
+			// 間接的にウインドウプロシージャを呼び出す
+			DispatchMessage(&msg);
+
+			// アプリ終了命令が来た
+			if (msg.message == WM_QUIT) {
+				break;
+			}
+		} else {
+			render.update();
+			render.draw();
+		}
+	}
 
 	UnregisterClass(CLASS_NAME, hInstance);
 
