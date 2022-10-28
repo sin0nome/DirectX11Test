@@ -3,7 +3,6 @@
 
 Render::Render(const HWND hWnd) {
 	this->d3d = std::make_shared<Direct3d>(hWnd);
-
 }
 
 void Render::init(void) {
@@ -104,7 +103,7 @@ void Render::draw(void) const {
 	// ‰æ–Ê‚Ì“h‚è‚Â‚Ô‚µ
 	// RGBA
 	constexpr float color[4] = { 0.5f, 0.5f , 0.5f , 1.0f };
-	this->d3d->context->ClearRenderTargetView(this->d3d->renderTarget.Get(), color);
+	//this->d3d->context->ClearRenderTargetView(this->d3d->renderTarget.Get(), color);
 
 	this->d3d->context->Draw(36, 0);
 
